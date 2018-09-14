@@ -42,9 +42,11 @@ class Collector(threading.Thread):
                                     'Host': 'spotifycharts.com',
                                     'Referer': 'https://spotifycharts.com/regional/ad/weekly/latest',
                                     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101 Firefox/45.0'})
+
             retry = 3
             while True:
                 download = session.get(url)
+                return download.content
                 if self.is_csv_ok(download.content):
                     return download.content
                 print "Retrying for '%s'" % url
@@ -103,15 +105,16 @@ class Collector(threading.Thread):
 if __name__ == "__main__":
 
     one_day = timedelta(days=1)
-    start_date = date(2017, 1, 1)
+    start_date = date(2018, 1, 10)
     end_date = datetime.now().date() - (2 * one_day)
 
-    regions = ["global", "us", "gb", "ad", "ar", "at", "au", "be", "bg",
-               "bo", "br", "ca", "ch", "cl", "co", "cr", "cy", "cz", "de",
-               "dk", "do", "ec", "ee", "es", "fi", "fr", "gr", "gt", "hk",
-               "hn", "hu", "id", "ie", "is", "it", "jp", "lt", "lu", "lv",
-               "mc", "mt", "mx", "my", "ni", "nl", "no", "nz", "pa", "pe",
-               "ph", "pl", "pt", "py", "se", "sg", "sk", "sv", "tr", "tw", "uy"]
+    regions = ["global", "us"]
+    # regions = ["global", "us", "gb", "ad", "ar", "at", "au", "be", "bg",
+    #            "bo", "br", "ca", "ch", "cl", "co", "cr", "cy", "cz", "de",
+    #            "dk", "do", "ec", "ee", "es", "fi", "fr", "gr", "gt", "hk",
+    #            "hn", "hu", "id", "ie", "is", "it", "jp", "lt", "lu", "lv",
+    #            "mc", "mt", "mx", "my", "ni", "nl", "no", "nz", "pa", "pe",
+    #            "ph", "pl", "pt", "py", "se", "sg", "sk", "sv", "tr", "tw", "uy"]
 
     for region in regions:
         collector = Collector(region, start_date, end_date)
